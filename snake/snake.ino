@@ -16,13 +16,21 @@ void setup() {
 
   strip.begin();           // INITIALIZE NeoPixel strip object
   strip.show();            // Turn OFF display
-  strip.setBrightness(1); // Set BRIGHTNESS to about 1/5 (max = 255)
+  strip.setBrightness(10); // Set BRIGHTNESS to about 1/5 (max = 255)
   Serial.begin(9600);
+  food.row = -1;
+  food.col = -1;
+  snake.row = 3;//random(8);
+  snake.col = 2;//random(8);
+  color = strip.Color(255, 0,0);
 }
 
 void loop ()
 {
-  snakeCharmer();
+  generateFood();    // if there is no food, generate one
+  calculateSnake();  // calculates snake parameters
+  handleGameStates();
+  strip.show();
   delay(100);
 }
 

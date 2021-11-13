@@ -14,13 +14,18 @@
 #define ROWS 8
 #define COLUMNS 8
 
+#define INITIAL_LENGTH 3  // initial lenght of snake
 
+int gameOver = 0;
+int win = 0;
 struct point
 {
   int row = 0, col = 0;
 };
 
 point snake;
+point food;
+
 
 enum  // Give numbers to directions
 {
@@ -30,9 +35,9 @@ enum  // Give numbers to directions
   DOWN
 };
 
-int displayMatrix[ROWS][COLUMNS] = {};  // This is the main playing field
+int gameboard[ROWS][COLUMNS] = {};  // This is the main playing field
 uint32_t color;
-int snakeDirection = DOWN;
+int snakeDirection = RIGHT;
 int snakeLength = 3;
 
 void printstuff(void);
