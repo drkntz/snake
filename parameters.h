@@ -9,25 +9,32 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+// Input buttons, active high
+#define LEFT_PIN 2
+#define RIGHT_PIN 3
+#define UP_PIN 4
+#define DOWN_PIN 5
+
+// NeoPixel display settings
 #define LED_PIN 6       // Pin for neopixel serial data
 #define LED_COUNT 64    // Size of matrix display
 #define ROWS 8
 #define COLUMNS 8
 
-#define INITIAL_LENGTH 3  // initial lenght of snake
+#define INITIAL_LENGTH 4  // initial length of snake
 
-int gameOver = 0;
-int win = 0;
+// Structure for a 2d coordinate (row,col)
 struct point
 {
-  int row = 0, col = 0;
+  uint8_t row = 0, col = 0;
 };
 
+// Create two point coordinates
 point snake;
 point food;
 
-
-enum  // Give numbers to directions
+// Enumerate snake movement directions
+enum
 {
   LEFT,
   RIGHT,
@@ -35,13 +42,25 @@ enum  // Give numbers to directions
   DOWN
 };
 
-int gameboard[ROWS][COLUMNS] = {};  // This is the main playing field
-uint32_t color;
-int snakeDirection = RIGHT;
-int snakeLength = 3;
+// Enumerate game States
+enum
+{
+  S_RUN,
+  S_WON,
+  S_LOST
+};
 
-void printstuff(void);
-// Function prototypes
-void testSnake(void);
+uint8_t gameState = S_RUN;
+
+uint8_t gameboard[ROWS][COLUMNS] = {};  // This array contains the snake
+
+// Colors for the NeoPixel display
+uint32_t snakeColor;
+uint32_t backgroundColor;
+uint32_t foodColor;
+
+// Snake direction and body length
+uint8_t snakeDirection = RIGHT;
+uint8_t snakeLength = INITIAL_LENGTH;
 
 #endif

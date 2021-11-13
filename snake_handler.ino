@@ -17,52 +17,59 @@
    */
 
 
- // calculate snake movement data
+// calculate snake movement data
 void calculateSnake() {
+  
+  // Move the snake head coordinates towards snakeDirection
+  // Wrap to other side of display if head coordinates have gone off the screen
   switch (snakeDirection) {
     case UP:
       snake.row--;
       fixEdge();
-      strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
+      //strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
+      // TODO: remove this if not needed
       break;
 
     case RIGHT:
       snake.col++;
       fixEdge();
-      strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
+      //strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
       break;
 
     case DOWN:
       snake.row++;
       fixEdge();
-      strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
+      //strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
       break;
 
     case LEFT:
       snake.col--;
       fixEdge();
-      strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
+      //strip.setPixelColor(((COLUMNS)*snake.row + snake.col), color);
       break;
 
     default: // if the snake is not moving, exit
-      return;
+    return;
   }
 
-  // if there is a snake body segment, this will cause the end of the game (snake must be moving)
-  if (gameboard[snake.row][snake.col] > 1 && snakeDirection != 0) {
+  // Game is over if the snake head has landed on a body segment
+  if (gameboard[snake.row][snake.col] > 1) {
     // game over later TODO
     return;
   }
 
   // check if the food was eaten
-  if (snake.row == food.row && snake.col == food.col) {
-    food.row = -1; // reset food
+  if (snake.row == food.row && snake.col == food.col) 
+  {
+    food.row = -1; // reset food TODO
     food.col = -1;
 
     // increment snake length
     snakeLength++;
 
-    // increment all the snake body segments
+    // Increment all the snake body segments. 
+    // This keeps the tip of the tail from being removed in the 
+    // movement/decrement step below. 
     for (int row = 0; row < 8; row++) {
       for (int col = 0; col < 8; col++) {
         if (gameboard[row][col] > 0 ) {
@@ -72,33 +79,39 @@ void calculateSnake() {
     }
   }
 
-  // add new segment at the snake head location
-  gameboard[snake.row][snake.col] = snakeLength + 1; // will be decremented in a moment
+  // Add new segment at the snake head location. This will create a snake body of length n+1, where the body segments
+  // are entered into the gameboard as [1][2][3]...[n-1][n][n+1]. n+1 is at the NEW head location
+  gameboard[snake.row][snake.col] = snakeLength + 1;
 
-  // decrement all the snake body segments, if segment is 0, turn the corresponding led off
-  for (int row = 0; row < 8; row++) {
-    for (int col = 0; col < 8; col++) {
-      // if there is a body segment, decrement it's value
-      if (gameboard[row][col] > 0 ) {
+  // Decrement all of the snake body segments entered into the gameboard. 
+  // In above example, the cells now contain [0][1][2]...[n-2][n-1][n], where n is at the NEW head location. 
+  // The snake has now been moved!
+  for (int row = 0; row < 8; row++) 
+  {
+    for (int col = 0; col < 8; col++) 
+    {
+      // Decrement snake body segment entries
+      if (gameboard[row][col] > 0 ) 
+      {
         gameboard[row][col]--;
       }
 
-      // display the current pixel
-      if(gameboard[row][col] > 0)
+      // Add the pixel to the NeoPixel buffer
+      if(gameboard[row][col] > 0) // Snake pixel
       { 
-        strip.setPixelColor(((COLUMNS)*row + col), color);
+        strip.setPixelColor(((COLUMNS)*row + col), snakeColor);
       }
-      else
+      else // "empty" pixel
       {
-        strip.setPixelColor(((COLUMNS)*row + col), (0, 255, 255));
+        strip.setPixelColor(((COLUMNS)*row + col), backgroundColor);
       }
-       //matrix.setLed(0, row, col, gameboard[row][col] == 0 ? 0 : 1);
-      strip.show();
     }
   }
+  //strip.show(); // Show neopixel buffer
 }
 
-// causes the snake to appear on the other side of the screen if it gets out of the edge
+
+// Wraps the snake around the display if it falls off the edge
 void fixEdge() {
   snake.col < 0 ? snake.col += 8 : 0;
   snake.col > 7 ? snake.col -= 8 : 0;
@@ -107,28 +120,31 @@ void fixEdge() {
 }
 
 
-// if there is no food, generate one, also check for victory
+// Create a new food 
 void generateFood() {
-  if (food.row == -1 || food.col == -1) {
+  if (food.row == -1 || food.col == -1) 
+  {
     // self-explanatory
-    if (snakeLength >= 64) {
-      //win = true;
+    if (snakeLength >= LED_COUNT) {
+      gameState = S_WON; //win = true; // TODO: this seems like a dumb place to check for victory
       return; // prevent the food generator from running, in this case it would run forever, because it will not be able to find a pixel without a snake
     }
 
     // generate food until it is in the right position
-    do {
-      food.col = random(8);
-      food.row = random(8);
+    do 
+    {
+      food.col = random(COLUMNS);
+      food.row = random(ROWS);
     } while (gameboard[food.row][food.col] > 0);
-    strip.setPixelColor(((COLUMNS)*food.row + food.col), (0, 255, 0));
-    strip.show();
+    
+    
   }
+  strip.setPixelColor(((COLUMNS)*food.row + food.col), foodColor);
 }
 
 
 void handleGameStates() {
-  if (gameOver || win) {
+  if (0 /*gameOver || win*/) {
     //unrollSnake();
 
     //showScoreMessage(snakeLength - initialSnakeLength);

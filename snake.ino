@@ -1,5 +1,6 @@
 /*  snake.ino
  *  A program that plays the game snake with an Arduino and matrix display
+ *  For more info (don't know if this is the original author): https://create.arduino.cc/projecthub/rishab8551/arduino-snake-game-using-arduino-and-martix-6c230c
  *  Designed for CMPEH 472 final project
  *  Zach Martin
  *  Aaron Olsen
@@ -14,15 +15,18 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
 
+  pinMode(A0, INPUT);
   strip.begin();           // INITIALIZE NeoPixel strip object
   strip.show();            // Turn OFF display
   strip.setBrightness(10); // Set BRIGHTNESS to about 1/5 (max = 255)
   Serial.begin(9600);
-  food.row = -1;
-  food.col = -1;
-  snake.row = 3;//random(8);
-  snake.col = 2;//random(8);
-  color = strip.Color(255, 0,0);
+  food.row = 3;
+  food.col = 5;
+  snake.row = random(8);
+  snake.col = random(8);
+  snakeColor = strip.Color(255, 0,0);
+  backgroundColor = strip.Color(0, 0,255);
+  foodColor = strip.Color(0, 255, 0);
 }
 
 void loop ()
@@ -30,8 +34,13 @@ void loop ()
   generateFood();    // if there is no food, generate one
   calculateSnake();  // calculates snake parameters
   handleGameStates();
+  generateFood();
+  randomSeed(analogRead(A0)); // Seed rand() with an unconnected pin
+  Serial.print(food.row);
+  Serial.print(" ");
+  Serial.println(food.col);
   strip.show();
-  delay(100);
+  delay(200);
 }
 
 
