@@ -9,11 +9,11 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-// Input buttons, active high
-#define LEFT_PIN 2
-#define RIGHT_PIN 3
-#define UP_PIN 4
-#define DOWN_PIN 5
+// Input buttons, active low & internally pulled up
+#define LEFT_BUTTON 2
+#define RIGHT_BUTTON 3
+#define UP_BUTTON 4
+#define DOWN_BUTTON 5
 
 // NeoPixel display settings
 #define LED_PIN 6       // Pin for neopixel serial data
@@ -22,11 +22,12 @@
 #define COLUMNS 8
 
 #define INITIAL_LENGTH 4  // initial length of snake
+#define INITIAL_SPEED 500 // Initial period of snake loop, in ms
 
 // Structure for a 2d coordinate (row,col)
 struct point
 {
-  uint8_t row = 0, col = 0;
+  int8_t row = 0, col = 0;
 };
 
 // Create two point coordinates
@@ -59,8 +60,9 @@ uint32_t snakeColor;
 uint32_t backgroundColor;
 uint32_t foodColor;
 
-// Snake direction and body length
-uint8_t snakeDirection = RIGHT;
+// Snake direction, body, length
+volatile uint8_t snakeDirection = RIGHT; // volatile because it is used in interrupts
 uint8_t snakeLength = INITIAL_LENGTH;
+uint16_t snakeSpeed = INITIAL_SPEED;   // Period for main loop in ms
 
 #endif

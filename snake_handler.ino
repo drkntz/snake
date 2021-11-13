@@ -54,18 +54,22 @@ void calculateSnake() {
 
   // Game is over if the snake head has landed on a body segment
   if (gameboard[snake.row][snake.col] > 1) {
-    // game over later TODO
+    gameState = S_LOST; // Lost game
     return;
   }
 
   // check if the food was eaten
   if (snake.row == food.row && snake.col == food.col) 
   {
-    food.row = -1; // reset food TODO
+    // reset the food
+    food.row = -1;
     food.col = -1;
-
+    
     // increment snake length
     snakeLength++;
+
+    // Make game faster
+    snakeSpeed = (snakeSpeed*4)/5;
 
     // Increment all the snake body segments. 
     // This keeps the tip of the tail from being removed in the 
@@ -117,6 +121,7 @@ void fixEdge() {
   snake.col > 7 ? snake.col -= 8 : 0;
   snake.row < 0 ? snake.row += 8 : 0;
   snake.row > 7 ? snake.row -= 8 : 0;
+  strip.setPixelColor(((COLUMNS)*snake.row + snake.col), snakeColor);
 }
 
 
@@ -133,9 +138,15 @@ void generateFood() {
     // generate food until it is in the right position
     do 
     {
+      randomSeed(analogRead(A0)); // Seed rand() with an unconnected pin
       food.col = random(COLUMNS);
       food.row = random(ROWS);
+      Serial.print("generatingfood");
     } while (gameboard[food.row][food.col] > 0);
+    Serial.print("\nFood is now at ");
+    Serial.print(food.row);
+    Serial.print(", ");
+    Serial.println(food.col);
     
     
   }
@@ -144,28 +155,34 @@ void generateFood() {
 
 
 void handleGameStates() {
-  if (0 /*gameOver || win*/) {
-    //unrollSnake();
+  switch(gameState)
+  {
+    case S_RUN: // do nothing for now
+    break;
 
-    //showScoreMessage(snakeLength - initialSnakeLength);
+    case S_WON:
+      for(uint8_t i = 0; i < LED_COUNT; i++)
+      {
+        strip.setPixelColor(i, foodColor);
+      }
+      strip.show();
+      for(;;){} // do nothing
+   break;
 
-    //if (gameOver) showGameOverMessage();
-    //else if (win) showWinMessage();
+   case S_LOST:
+    for(uint8_t i = 0; i < LED_COUNT; i++)
+    { 
+      strip.setPixelColor(i, backgroundColor); // TODO: make game over display, then refresh game
+    }
+    Serial.println("Game lost");
+    strip.show();
+    for(;;){} // do nothing
+   break;
 
-    // re-init the game
-    //win = false;
-    //gameOver = false;
-    snake.row = random(8);
-    snake.col = random(8);
-    food.row = -1;
-    food.col = -1;
-    snakeLength = INITIAL_LENGTH;
-    snakeDirection = 0;
-    memset(gameboard, 0, sizeof(gameboard[0][0]) * 8 * 8);
-    strip.clear();
+    default:
+    // do nothing
+    break;
   }
-}
 
-float mapf(float x, float in_min, float in_max, float out_min, float out_max) {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  // TODO: if game won, display message and restart game
 }

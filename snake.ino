@@ -14,34 +14,56 @@
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
-
   pinMode(A0, INPUT);
+  
   strip.begin();           // INITIALIZE NeoPixel strip object
   strip.show();            // Turn OFF display
   strip.setBrightness(10); // Set BRIGHTNESS to about 1/5 (max = 255)
+  
   Serial.begin(9600);
-  food.row = 3;
-  food.col = 5;
+
+  // Initialize food and snake location
+  randomSeed(analogRead(A0));
+  food.row = random(8);
+  food.col = random(8);
   snake.row = random(8);
   snake.col = random(8);
+
+  // Define colors in (R, G, B). 256 bit.
   snakeColor = strip.Color(255, 0,0);
-  backgroundColor = strip.Color(0, 0,255);
-  foodColor = strip.Color(0, 255, 0);
+  backgroundColor = strip.Color(0, 0, 77);
+  foodColor = strip.Color(204, 136, 0);
+
+  // Define input pins
+  pinMode(LEFT_BUTTON, INPUT_PULLUP);
+  pinMode(RIGHT_BUTTON, INPUT_PULLUP);
+  pinMode(UP_BUTTON, INPUT_PULLUP);
+  pinMode(DOWN_BUTTON, INPUT_PULLUP);
+  
 }
 
-void loop ()
+void loop()
 {
-  generateFood();    // if there is no food, generate one
-  calculateSnake();  // calculates snake parameters
-  handleGameStates();
-  generateFood();
-  randomSeed(analogRead(A0)); // Seed rand() with an unconnected pin
-  Serial.print(food.row);
-  Serial.print(" ");
-  Serial.println(food.col);
-  strip.show();
-  delay(200);
+
+  for(uint16_t i = 0; ; i++)
+  {
+    readControls();
+
+    if( i == snakeSpeed )
+    {
+      i = 0;
+      calculateSnake();  // calculates snake parameters
+      generateFood();    // if there is no food, generate one
+      handleGameStates();
+      strip.show();
+    }
+    
+    delay(1);
+  }
+  
+  
 }
+
 
 
  
