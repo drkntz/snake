@@ -170,13 +170,10 @@ void handleGameStates() {
    break;
 
    case S_LOST:
-    for(uint8_t i = 0; i < LED_COUNT; i++)
-    { 
-      strip.setPixelColor(i, backgroundColor); // TODO: make game over display, then refresh game
-    }
+    displayOverMsg();
     Serial.println("Game lost");
-    strip.show();
-    for(;;){} // do nothing
+    delay(5000);
+    gameState = S_RUN;
    break;
 
     default:

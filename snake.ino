@@ -30,9 +30,9 @@ void setup() {
   snake.col = random(8);
 
   // Define colors in (R, G, B). 256 bit.
-  snakeColor = strip.Color(255, 0,0);
-  backgroundColor = strip.Color(0, 0, 77);
-  foodColor = strip.Color(204, 136, 0);
+  snakeColor = strip.Color(0, 250,38);
+  backgroundColor = strip.Color(0, 0, 30);
+  foodColor = strip.Color(250, 204, 0);
 
   // Define input pins
   pinMode(LEFT_BUTTON, INPUT_PULLUP);
@@ -45,6 +45,11 @@ void setup() {
 void loop()
 {
 
+  //for(;;)
+  //{
+   // displayMsg();
+    //displayOverMsg();
+  //}
   for(uint16_t i = 0; ; i++)
   {
     readControls();
