@@ -68,7 +68,7 @@ void calculateSnake() {
     snakeLength++;
 
     // Make game faster
-    snakeSpeed = (snakeSpeed*4)/5;
+    snakeSpeed = snakeSpeed - 15;
 
     // Increment all the snake body segments. 
     // This keeps the tip of the tail from being removed in the 
@@ -97,13 +97,8 @@ void calculateSnake() {
       if (gameboard[row][col] > 0 ) 
       {
         gameboard[row][col]--;
-      }
-
-      // Add the pixel to the NeoPixel buffer
-      if(gameboard[row][col] > 0) // Snake pixel
-      { 
-        strip.setPixelColor(((COLUMNS)*row + col), snakeColor); //---------------------------------------- If we do minus one here, the snake will start in the spot we tell it to I think. 
-      }
+        (row == snake.row && col == snake.col) ? strip.setPixelColor(((COLUMNS)*row + col), headColor): strip.setPixelColor(((COLUMNS)*row + col), snakeColor);
+      } 
       else // "empty" pixel
       {
         strip.setPixelColor(((COLUMNS)*row + col), backgroundColor);

@@ -56,7 +56,8 @@ uint8_t gameState = S_RUN;
 uint8_t gameboard[ROWS][COLUMNS] = {};  // This array contains the snake
 
 // This contains the "Game Over" message.
-uint8_t gameOver[ROWS][COLUMNS*11] = {
+// todo:  progmem?
+const bool gameOver[ROWS][COLUMNS*11] = {
   0, 0, 0, 0, 0, 0, 0, 0,      0, 0, 1, 1, 1, 1, 0, 0,      0, 1, 1, 1, 1, 1, 1, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 1, 1, 1, 1, 1, 0,      0, 0, 0, 0, 0, 0, 0, 0,      0, 1, 1, 1, 1, 1, 1, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 1, 1, 1, 1, 1, 0,      0, 1, 1, 1, 1, 1, 0, 0,      0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 1, 0, 0, 1, 1, 0,      0, 1, 0, 0, 0, 0, 0, 0,      0, 0, 0, 0, 0, 0, 0, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 0, 0, 0, 0, 0, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0,      0, 1, 0, 0, 0, 0, 0, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 0, 1, 1, 0, 1, 0,      0, 1, 0, 0, 0, 0, 0, 0,      0, 0, 0, 0, 0, 0, 0, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 1, 0, 0, 0, 1, 0, 0,      0, 1, 0, 0, 0, 0, 0, 0,      0, 1, 0, 0, 0, 0, 1, 0,      0, 0, 0, 0, 0, 0, 0, 0,
@@ -71,10 +72,15 @@ uint8_t gameOver[ROWS][COLUMNS*11] = {
 uint32_t snakeColor;
 uint32_t backgroundColor;
 uint32_t foodColor;
+uint32_t headColor;
 
 // Snake direction, body, length
 volatile uint8_t snakeDirection = RIGHT; // volatile because it is used in interrupts
 uint8_t snakeLength = INITIAL_LENGTH;
 uint16_t snakeSpeed = INITIAL_SPEED;   // Period for main loop in ms
+
+void generateFood(void);
+void handleGameStates(void);
+void fixEdge(void);
 
 #endif

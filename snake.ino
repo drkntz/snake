@@ -18,7 +18,7 @@ void setup() {
   
   strip.begin();           // INITIALIZE NeoPixel strip object
   strip.show();            // Turn OFF display
-  strip.setBrightness(10); // Set BRIGHTNESS to about 1/25 (max = 255)
+  strip.setBrightness(50); // Set BRIGHTNESS to about 1/25 (max = 255)
   
   Serial.begin(9600);
 
@@ -31,8 +31,9 @@ void setup() {
 
   // Define colors in (R, G, B). 256 bit.
   snakeColor = strip.Color(255, 0,0);
-  backgroundColor = strip.Color(0, 0, 77);
-  foodColor = strip.Color(204, 136, 0);
+  backgroundColor = strip.Color(0, 0, 30);
+  foodColor = strip.Color(0, 255, 30);
+  headColor = strip.Color(255, 70, 0);
 
   // Define input pins
   pinMode(LEFT_BUTTON, INPUT_PULLUP);
