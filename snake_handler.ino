@@ -16,7 +16,6 @@
    *  This section increments the entire snake body, adds the head
    */
 
-
 // calculate snake movement data
 void calculateSnake() {
   
@@ -103,7 +102,7 @@ void calculateSnake() {
       // Add the pixel to the NeoPixel buffer
       if(gameboard[row][col] > 0) // Snake pixel
       { 
-        strip.setPixelColor(((COLUMNS)*row + col), snakeColor);
+        strip.setPixelColor(((COLUMNS)*row + col), snakeColor); //---------------------------------------- If we do minus one here, the snake will start in the spot we tell it to I think. 
       }
       else // "empty" pixel
       {
@@ -135,7 +134,7 @@ void generateFood() {
       return; // prevent the food generator from running, in this case it would run forever, because it will not be able to find a pixel without a snake
     }
 
-    // generate food until it is in the right position
+    // generate food until it is in the right position (not on snake)
     do 
     {
       randomSeed(analogRead(A0)); // Seed rand() with an unconnected pin
@@ -170,11 +169,80 @@ void handleGameStates() {
    break;
 
    case S_LOST:
-    displayOverMsg();
+    for (int i = 0; i <= (COLUMNS*11-8); i++)
+    {
+      for (int row = 0; row < 8; row++) 
+      {
+        for (int col = 0; col < 8; col++) 
+        {
+          // Add the pixel to the NeoPixel buffer
+          if(gameOver[row][col+i] == 1)
+          { 
+            strip.setPixelColor(((COLUMNS)*row + col), foodColor);          
+          }
+          else // "empty" pixel
+          {
+            strip.setPixelColor(((COLUMNS)*row + col), backgroundColor);
+          }
+        }
+      }
+      strip.show();
+      delay(100);
+    }
+    // Tell user to press right to start the next game. 
+    snakeDirection = DOWN;
+    while (snakeDirection == DOWN)
+    {
+      for (int i = 0; i <= (COLUMNS*11-8); i++)
+      {
+        for (int row = 0; row < 8; row++) 
+        {
+          for (int col = 0; col < 8; col++) 
+          {
+            // Add the pixel to the NeoPixel buffer
+            if(gameOver[row][col+i] == 1)
+            { 
+              strip.setPixelColor(((COLUMNS)*row + col), foodColor);
+            }
+            else // "empty" pixel
+            {
+              strip.setPixelColor(((COLUMNS)*row + col), backgroundColor);
+            }
+
+            readControls();
+            if (snakeDirection == RIGHT)
+            {
+              snakeLength = INITIAL_LENGTH;
+              snakeSpeed = INITIAL_SPEED; 
+              gameState = S_RUN;
+              break;
+            }
+          if (snakeDirection == RIGHT)
+          {
+            break;
+          }
+          }
+        if (snakeDirection == RIGHT)
+        {
+          break;
+        }
+        }
+        strip.show();
+        delay(100);
+      if (snakeDirection == RIGHT)
+      {
+        break;
+      }
+      }
+    }
+    //for(uint8_t i = 0; i < LED_COUNT; i++)
+    //{ 
+      //strip.setPixelColor(i, backgroundColor); // TODO: make game over display, then refresh game
+    //}
     Serial.println("Game lost");
-    delay(5000);
-    gameState = S_RUN;
-   break;
+    strip.show();
+    for(;;){} // do nothing
+    break;
 
     default:
     // do nothing
