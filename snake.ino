@@ -31,7 +31,8 @@ void setup() {
 
   // Define colors in (R, G, B). 256 bit.
   snakeColor = strip.Color(255, 0,0);
-  backgroundColor = strip.Color(0, 0, 30);
+  //backgroundColor = strip.Color(0, 0, 30);
+  backgroundColor = strip.Color(0, 0, 100);
   foodColor = strip.Color(0, 255, 30);
   headColor = strip.Color(255, 70, 0);
 

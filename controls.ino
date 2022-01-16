@@ -11,7 +11,7 @@
  void readControls(void)
  {
   snakeDirection = digitalRead(LEFT_BUTTON) ? snakeDirection: LEFT;
-  snakeDirection = digitalRead(RIGHT_BUTTON) ? snakeDirection: RIGHT;
-  snakeDirection = digitalRead(UP_BUTTON) ? snakeDirection: UP;
-  snakeDirection = digitalRead(DOWN_BUTTON) ? snakeDirection: DOWN;
+  snakeDirection = digitalRead(RIGHT_BUTTON)? snakeDirection: RIGHT;
+  snakeDirection = digitalRead(UP_BUTTON)? snakeDirection: UP;
+  snakeDirection = digitalRead(DOWN_BUTTON)? snakeDirection: DOWN;
  }

@@ -21,7 +21,7 @@
 #define ROWS 8
 #define COLUMNS 8
 
-#define INITIAL_LENGTH 3  // initial length of snake
+#define INITIAL_LENGTH 2  // initial length of snake
 #define INITIAL_SPEED 500 // Initial period of snake loop, in ms
 
 // Structure for a 2d coordinate (row,col)
@@ -75,7 +75,7 @@ uint32_t foodColor;
 uint32_t headColor;
 
 // Snake direction, body, length
-volatile uint8_t snakeDirection = RIGHT; // volatile because it is used in interrupts
+uint8_t snakeDirection = RIGHT;
 uint8_t snakeLength = INITIAL_LENGTH;
 uint16_t snakeSpeed = INITIAL_SPEED;   // Period for main loop in ms
 
